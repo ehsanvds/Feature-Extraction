@@ -11,8 +11,8 @@ from sklearn.pipeline import Pipeline
 # %matplotlib
 
 # file locations
-input_path = 'D:\OneDrive\VIV S5W0'
-output_path = 'D:\OneDrive\PhD Project\Supplementary Experiments (2nd)\PIV Data Analysis\VIV S5 W0\Feature Extraction'
+input_path = '---'
+output_path = '---'
 
 # test cases
 filenum = 1000

@@ -41,12 +41,17 @@ for i in range(filenum):
 #%% Plotting
 
 def multiplot(x1, y1, sample, vmin=None, vmax=None,
-              cmap='jet', D=50.8, title='', sp=[]):
+              cmap='jet', D=1, title='', sp=[]):
     """
-    Plotting a 2D contour from 1D arrays
+    Plotting a 2D contour using three 1D arrays
+    x1: horizontal axis coordinates
+    y1: vertical axis coordinates
+    sample: contour values
+    D: reference value for nondimensionalization
+    sp: subplot position as [nrows, ncols, index]
     """
-    x1 = x1/D + 0.5
-    y1 = (y1 - max(x)/2)/D
+    x1 = x1/D
+    y1 = (y1 - max(y1)/2)/D
     
     val = np.reshape(sample, (len(x1),len(y1)))
     val = np.transpose(val)
@@ -104,8 +109,6 @@ figManager.window.showMaximized()
 for i, component in enumerate(normalize(model.components_,axis=0), start=1):
     multiplot(y, x, component, title='NMF Component %d' % i, 
               sp=[2,n_components/2,i])
-
-# multiplot(y,x,normalize(model.components_,axis=0)[3,:],title='NMF Component 4')
 
 #%% Writing
 

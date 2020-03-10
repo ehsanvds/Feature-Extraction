@@ -8,24 +8,22 @@ import matplotlib.patches as mpatches
 from sklearn.preprocessing import MinMaxScaler, normalize
 from sklearn.decomposition import NMF
 from sklearn.pipeline import Pipeline
-# %matplotlib
 
 # file locations
 input_path = '---'
 output_path = '---'
 
 # test cases
-filenum = 1000
-angle = 130
-run = 'Theta' + '%04d' % (angle*10) + 'deg'
+filenum = 1000 #number of files in the test case
+angle = 180 # sample test case
+run = 'Theta' + '%04d' % angle + 'deg'
 
 ind_param = 4 # index column of considered parameter
 
 #%% reading files
+filename = '%s\\%s%06dn.dat' % (input_path, run, 1)
 
-filename = '%s\\%s\\%s%06dn.dat' % (input_path, run, run, 1)
-
-allparam = np.loadtxt(filename, delimiter=' ', skiprows=1, max_rows=7227)
+allparam = np.loadtxt(filename, delimiter=' ', skiprows=1, max_rows=2000)
 x = np.unique(allparam[:,0])
 y = np.unique(allparam[:,1])
 
@@ -39,7 +37,6 @@ for i in range(filenum):
                             skiprows=1, usecols = ind_param)
 
 #%% Plotting
-
 def multiplot(x1, y1, sample, vmin=None, vmax=None,
               cmap='jet', D=1, title='', sp=[]):
     """

@@ -60,6 +60,7 @@ def multiplot(x1, y1, sample, vmin=None, vmax=None,
         ax = plt.subplot(sp[0],sp[1],sp[2], aspect='equal')
         plt.contourf(x1, y1, val, levels=101, vmin=vmin, vmax=vmax, cmap=cmap)
     
+    # Geometry of tested model as a circular cylidner
     cylinder = mpatches.CirclePolygon((0,0), radius=0.5, resolution=50, 
                                edgecolor='k', facecolor='w', linewidth=1.2)
     ax.add_patch(cylinder)
@@ -73,7 +74,6 @@ def multiplot(x1, y1, sample, vmin=None, vmax=None,
     plt.title(title, textprop)
     
 #%% Exploring Data
-
 columns = ['X mm', 'Y mm', 'U mm/s', 'V mm/s', 'Vorticity 1/s', \
            'Velocity Magnitude mm/s', 'TKE (mm/s)^2', 'TKErms (mm/s)^2']
 allparam_df=pd.DataFrame(allparam, columns=columns)
@@ -86,7 +86,7 @@ for i in range(6):
     multiplot(y, x, data[i,:], vmin=-46, vmax=46,
               title='Instantaneous Vorticity %d' % (i+1), sp=[2,3,i+1])
 
-#%% Analysis
+#%% Feature Extraction
 
 # scaling
 scaler = MinMaxScaler()
@@ -107,8 +107,7 @@ for i, component in enumerate(normalize(model.components_,axis=0), start=1):
     multiplot(y, x, component, title='NMF Component %d' % i, 
               sp=[2,n_components/2,i])
 
-#%% Writing
-
+#%% Writing Data
 outputfile = '%s\\%s_NMF_components.dat' % (output_path, run)
 
 header = 'TITLE= "%s" VARIABLES="x (mm)", "y (mm)", "Component 1"' % run

@@ -6,7 +6,6 @@ import pandas as pd
 import numpy as np
 from PIL import Image
 from tqdm import tqdm
-import os
 
 #%% functions
 def filelist(path, ext):
@@ -37,4 +36,23 @@ def correction(array_t, array_r, averaging=True, scale_max=255):
         array_t = array_t / array_r * scale_max
     return array_t
 
-
+def correction_all(input_path, output_path, ref_img, ext):
+    """correcting and saving all images"""
+    # reading the files
+    array_r = np.array(Image.open(ref_img))
+    # list of folders
+    folders = folderlist(input_path)
+    for i in tqdm(folders):
+        # output directory
+        outdir = os.path.join(output_path,i)
+        if not os.path.exists(outdir):
+            os.mkdir(outdir)
+        # input directory
+        indir = os.path.join(input_path,i)
+        files = filelist(indir, ext)
+        for k in files:
+            array_t = np.mean(np.array(Image.open(os.path.join(indir,k))), axis=2)
+            array_t = correction(array_t, array_r, averaging=False)
+            img_out = Image.fromarray(array_t.astype('uint8'))
+            img_out = img_out.convert('RGB')
+            img_out.save(os.path.join(outdir,k))

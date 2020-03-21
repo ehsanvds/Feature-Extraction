@@ -56,3 +56,30 @@ def correction_all(input_path, output_path, ref_img, ext):
             img_out = Image.fromarray(array_t.astype('uint8'))
             img_out = img_out.convert('RGB')
             img_out.save(os.path.join(outdir,k))
+
+ def combine_files(input_path, ext):
+    """Combining mulitple files and setting the header as file names"""
+    # the first two columns in each file are used for matching rows
+    # list of folders
+    folders = folderlist(input_path)
+    for i in tqdm(folders):
+        # input directory
+        indir = os.path.join(input_path,i)
+        files = filelist(indir, ext)
+        df_all = pd.DataFrame()
+        for j in files:
+            # reading the file. Check for the settings.
+            df = pd.read_csv(os.path.join(indir,j), comment=';', header=None)
+            # setting fist two columns as indices (x and y)
+            df.set_index([df.columns[0], df.columns[1]], inplace=True)
+            # averaging columns as in RGB file
+            df = df.mean(axis=1)
+            # concatenating 
+            df_all = pd.concat([df_all,df], ignore_index=False, axis=1, join='outer')
+        # changing indices to columns
+        df_all = df_all.reindex(pd.MultiIndex.from_tuples(df_all.index))
+        df_all.reset_index(inplace=True)
+        # assigning the header. Check for the first two columns.
+        df_all.columns = ['x_pixel','y_pixel']+[i.replace(ext,'') for i in files]
+        # saving
+        df_all.to_csv(os.path.join(input_path,i+'_all.csv'), index=False)

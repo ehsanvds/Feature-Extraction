@@ -84,3 +84,13 @@ def correction_all(input_path, output_path, ref_img, ext):
         df_all.columns = ['x_pixel','y_pixel']+[i.replace(ext,'') for i in files]
         # saving
         df_all.to_csv(os.path.join(input_path,i+'_all.csv'), index=False)
+
+def averag_n(df, n):
+    """returning n rows by averaging the columns of a dataframe"""
+    length = int(len(df)/n)
+    start = 0
+    df_avg = pd.DataFrame()
+    for i in range(n):
+        df_avg = df_avg.append(df.iloc[start:start+length,:].mean(), ignore_index=True)
+        start += length
+    return df_avg

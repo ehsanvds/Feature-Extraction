@@ -102,7 +102,7 @@ def final_data_table(input_path, measured_file, n):
     df_final = pd.DataFrame()
     # reading measured results
     df_lab = pd.read_csv(lab_result_file, header=0)
-    # removing the first column (sample name)
+    # removing the first column (test name)
     df_lab.drop(columns=df_lab.columns[0], inplace=True)    
     # list of files
     files = filelist(input_path, '.csv')
@@ -112,9 +112,9 @@ def final_data_table(input_path, measured_file, n):
         df.drop(columns=[df.columns[0], df.columns[1]], inplace=True)
         # averaging each image and returng n data points
         df = average(df,n)
-        # adding sample name
-        df.insert(0,'sample','R{0:02d}'.format(i+1))
-        # adding labpratory results
+        # adding test name
+        df.insert(0,'test','R{0:02d}'.format(i+1))
+        # adding measured results
         for k in df_lab.columns:
             df[k]=df_lab[k][i]
         # appending data

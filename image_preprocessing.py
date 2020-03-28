@@ -120,3 +120,8 @@ def final_data_table(input_path, measured_file, n):
         # appending data
         df_final = df_final.append(df)
     return df_final
+
+if __name__=='__main__':
+    input_path = '...'
+    measured_file = '...'
+    df = final_data_table(input_path, measured_file)

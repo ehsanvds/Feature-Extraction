@@ -94,3 +94,29 @@ def averag_n(df, n):
         df_avg = df_avg.append(df.iloc[start:start+length,:].mean(), ignore_index=True)
         start += length
     return df_avg
+
+def final_data_table(input_path, measured_file, n):
+    """Reading all images and measured results to form a dataframe"""
+    # It is assumed that each file in input_path is associated to one row in measured_file.
+    # Note that the order of files and lab data should be the same.
+    df_final = pd.DataFrame()
+    # reading measured results
+    df_lab = pd.read_csv(lab_result_file, header=0)
+    # removing the first column (sample name)
+    df_lab.drop(columns=df_lab.columns[0], inplace=True)    
+    # list of files
+    files = filelist(input_path, '.csv')
+    for i, file in enumerate(files):
+        df = pd.read_csv(os.path.join(input_path,file), header=0)
+        # removing the first two columns (x and y values)
+        df.drop(columns=[df.columns[0], df.columns[1]], inplace=True)
+        # averaging each image and returng n data points
+        df = average(df,n)
+        # adding sample name
+        df.insert(0,'sample','R{0:02d}'.format(i+1))
+        # adding labpratory results
+        for k in df_lab.columns:
+            df[k]=df_lab[k][i]
+        # appending data
+        df_final = df_final.append(df)
+    return df_final

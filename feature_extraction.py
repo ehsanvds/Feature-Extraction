@@ -6,32 +6,18 @@ from sklearn.preprocessing import MinMaxScaler, normalize
 from sklearn.decomposition import NMF
 from sklearn.pipeline import Pipeline
 
-# file locations
+#%% Inputs
+# file directories
 input_path = '---'
 output_path = '---'
 
-# test cases
+# samples
 filenum = 1000 #number of files in the test case
 angle = 180 # sample test case
 run = 'Theta' + '%04d' % angle + 'deg'
 
-ind_param = 4 # index column of considered parameter
-
-#%% reading files
-filename = '%s\\%s%06dn.dat' % (input_path, run, 1)
-
-allparam = np.loadtxt(filename, delimiter=' ', skiprows=1, max_rows=2000)
-x = np.unique(allparam[:,0])
-y = np.unique(allparam[:,1])
-
-ncol = len(x)
-nrow = len(y)
-data = np.empty([filenum,nrow*ncol])
-
-for i in range(filenum):
-    filename = filename.replace('%06d' % i,'%06d' % (i+1))
-    data[i,:] = np.loadtxt(filename, delimiter=' ', 
-                            skiprows=1, usecols = ind_param)
+# index column of considered parameter
+ind_param = 4
 
 #%% Plotting
 def multiplot(x1, y1, sample, vmin=None, vmax=None,
@@ -70,6 +56,22 @@ def multiplot(x1, y1, sample, vmin=None, vmax=None,
     plt.ylabel('y*', textprop)
     plt.title(title, textprop)
     
+#%% reading files
+filename = '%s\\%s%06dn.dat' % (input_path, run, 1)
+
+allparam = np.loadtxt(filename, delimiter=' ', skiprows=1, max_rows=2000)
+x = np.unique(allparam[:,0])
+y = np.unique(allparam[:,1])
+
+ncol = len(x)
+nrow = len(y)
+data = np.empty([filenum,nrow*ncol])
+
+for i in range(filenum):
+    filename = filename.replace('%06d' % i,'%06d' % (i+1))
+    data[i,:] = np.loadtxt(filename, delimiter=' ', 
+                            skiprows=1, usecols = ind_param)
+
 #%% Exploring Data
 columns = ['X mm', 'Y mm', 'U mm/s', 'V mm/s', 'Vorticity 1/s', \
            'Velocity Magnitude mm/s', 'TKE (mm/s)^2', 'TKErms (mm/s)^2']
